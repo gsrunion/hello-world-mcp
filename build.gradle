@@ -1,0 +1,32 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	 toolchain {
+		 languageVersion = JavaLanguageVersion.of(21)
+	 }
+}
+
+repositories {
+	 mavenCentral()
+}
+
+dependencies {
+	 implementation platform('org.springframework.ai:spring-ai-bom:2.0.1')
+	 implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc'
+
+	 compileOnly 'org.projectlombok:lombok:1.18.42'
+	 annotationProcessor 'org.projectlombok:lombok:1.18.42'
+
+	 testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	 testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	 useJUnitPlatform()
+}
