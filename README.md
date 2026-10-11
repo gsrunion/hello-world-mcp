@@ -18,16 +18,19 @@ The Streamable HTTP MCP endpoint is available at `http://localhost:8080/mcp`.
 
 Configure your MCP client to connect to `http://localhost:8080/mcp` using the Streamable HTTP transport. The server exposes one tool named `hello` and requires no arguments.
 
-It also exposes a `delegate` tool that sends a prompt to the configured OpenAI-compatible chat endpoint and returns the model response. Set these environment variables before starting the server:
+It also exposes a `delegate` tool. Pass an alias such as `cloud-general` and a prompt; the server looks up the alias, selects its provider URL and model, then returns the response. The included examples define `openai-general` and `cloud-general` aliases. Set the values for the providers you plan to use before starting the server:
 
 ```bash
 export OPENAI_BASE_URL="https://api.openai.com"
 export OPENAI_API_KEY="your-api-key"
-export OPENAI_MODEL="your-model-name"
+export OPENAI_MODEL="your-openai-model"
+export EXAMPLE_CLOUD_BASE_URL="https://your-provider.example.com"
+export EXAMPLE_CLOUD_API_KEY="your-provider-api-key"
+export EXAMPLE_CLOUD_MODEL="your-provider-model"
 ./gradlew bootRun
 ```
 
-For OpenAI-compatible providers, set `OPENAI_BASE_URL` to the provider's base URL and use the model name expected by that provider. The defaults in `application.properties` are placeholders.
+Add providers under `delegate.providers.<provider-name>` and aliases under `delegate.aliases.<alias-name>` in `application.properties`. Each alias has a `provider` key and `model` value, so multiple aliases can point to different models at the same provider URL. Provider endpoints must implement the OpenAI chat completions API. The sample values in `application.properties` are placeholders.
 
 ## Build
 
