@@ -4,7 +4,7 @@ A minimal Spring Boot MCP server with one tool: `hello`. Calling it returns `Hel
 
 ## Requirements
 
-- Java 21+
+- Java 25+
 
 ## Run
 
