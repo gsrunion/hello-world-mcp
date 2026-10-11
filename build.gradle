@@ -19,6 +19,7 @@ repositories {
 dependencies {
 	 implementation platform("org.springframework.ai:spring-ai-bom:${springAiVersion}")
 	 implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc'
+	 implementation 'org.springframework.ai:spring-ai-starter-model-openai'
 
 	 compileOnly "org.projectlombok:lombok:${lombokVersion}"
 	 annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
