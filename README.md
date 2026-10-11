@@ -1,6 +1,6 @@
 # Hello World MCP
 
-A minimal Spring Boot MCP server with one tool: `hello`. Calling it returns `Hello, world!`.
+A minimal Spring Boot MCP server with a `hello` tool and a `delegate` tool for invoking tools on configured remote MCP servers.
 
 ## Requirements
 
@@ -18,19 +18,14 @@ The stateless Streamable HTTP MCP endpoint is available at `http://localhost:808
 
 Configure your MCP client to connect to `http://localhost:8080/mcp` using the stateless Streamable HTTP transport. The server exposes `hello` and `delegate` tools.
 
-It also exposes a `delegate` tool. Pass an alias such as `cloud-general` and a prompt; the server looks up the alias, selects its provider URL and model, then returns the response. The included examples define `openai-general` and `cloud-general` aliases. Set the values for the providers you plan to use before starting the server:
+The `delegate` tool invokes a tool on a remote MCP server and returns its result. Add each remote Streamable HTTP MCP server to `application.properties`:
 
-```bash
-export OPENAI_BASE_URL="https://api.openai.com"
-export OPENAI_API_KEY="your-api-key"
-export OPENAI_MODEL="your-openai-model"
-export EXAMPLE_CLOUD_BASE_URL="https://your-provider.example.com"
-export EXAMPLE_CLOUD_API_KEY="your-provider-api-key"
-export EXAMPLE_CLOUD_MODEL="your-provider-model"
-./gradlew bootRun
+```properties
+spring.ai.mcp.client.streamable-http.connections.filesystem.url=https://your-mcp-host.example.com
+spring.ai.mcp.client.streamable-http.connections.filesystem.endpoint=/mcp
 ```
 
-Add providers under `delegate.providers.<provider-name>` and aliases under `delegate.aliases.<alias-name>` in `application.properties`. Each alias has a `provider` key and `model` value, so multiple aliases can point to different models at the same provider URL. Provider endpoints must implement the OpenAI chat completions API. The sample values in `application.properties` are placeholders.
+The connection key (`filesystem` above) is a local name for that remote server. The MCP client connects to configured servers at startup and discovers their tools. `delegate` takes the remote tool name as exposed by Spring AI and a JSON object string containing the remote tool's arguments. When names collide, Spring AI prefixes them; pass the full exposed name shown in the discovered tool list.
 
 ## Build
 
