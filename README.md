@@ -12,11 +12,11 @@ A minimal Spring Boot MCP server with one tool: `hello`. Calling it returns `Hel
 ./gradlew bootRun
 ```
 
-The Streamable HTTP MCP endpoint is available at `http://localhost:8080/mcp`.
+The stateless Streamable HTTP MCP endpoint is available at `http://localhost:8080/mcp`.
 
 ## MCP client configuration
 
-Configure your MCP client to connect to `http://localhost:8080/mcp` using the Streamable HTTP transport. The server exposes one tool named `hello` and requires no arguments.
+Configure your MCP client to connect to `http://localhost:8080/mcp` using the stateless Streamable HTTP transport. The server exposes `hello` and `delegate` tools.
 
 It also exposes a `delegate` tool. Pass an alias such as `cloud-general` and a prompt; the server looks up the alias, selects its provider URL and model, then returns the response. The included examples define `openai-general` and `cloud-general` aliases. Set the values for the providers you plan to use before starting the server:
 
