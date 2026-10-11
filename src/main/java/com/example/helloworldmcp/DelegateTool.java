@@ -16,14 +16,21 @@ import org.springframework.stereotype.Component;
 public class DelegateTool {
 
     private final ObjectProvider<SyncMcpToolCallbackProvider> remoteToolProvider;
+    private final DelegateProperties delegateProperties;
 
-    @McpTool(name = "delegate", description = "Invoke a tool exposed by a configured remote MCP server")
+    @McpTool(name = "delegate", description = "Assign work to a configured remote agent by invoking its MCP task tool")
     public String delegate(
-            @McpToolParam(description = "The remote tool name as exposed by the MCP client, including any server prefix", required = true) String toolName,
-            @McpToolParam(description = "Arguments for the remote tool as a JSON object string", required = true) String argumentsJson) {
+            @McpToolParam(description = "Configured agent alias, for example repo-agent", required = true) String agent,
+            @McpToolParam(description = "Structured arguments for the agent's remote task tool, as a JSON object string", required = true) String argumentsJson) {
         SyncMcpToolCallbackProvider provider = remoteToolProvider.getIfAvailable();
         if (provider == null) {
             throw new IllegalStateException("No remote MCP connections are configured");
+        }
+
+        String toolName = delegateProperties.getAgents().getOrDefault(agent, "");
+        if (toolName.isBlank()) {
+            throw new IllegalArgumentException("Unknown agent '%s'. Configured agents: %s"
+                    .formatted(agent, delegateProperties.getAgents().keySet()));
         }
 
         ToolCallback callback = Arrays.stream(provider.getToolCallbacks())

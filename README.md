@@ -25,7 +25,14 @@ spring.ai.mcp.client.streamable-http.connections.filesystem.url=https://your-mcp
 spring.ai.mcp.client.streamable-http.connections.filesystem.endpoint=/mcp
 ```
 
-The connection key (`filesystem` above) is a local name for that remote server. The MCP client connects to configured servers at startup and discovers their tools. `delegate` takes the remote tool name as exposed by Spring AI and a JSON object string containing the remote tool's arguments. When names collide, Spring AI prefixes them; pass the full exposed name shown in the discovered tool list.
+The connection key (`filesystem` above) is a local name for that remote server. The MCP client connects to configured servers at startup and discovers their tools. Add agent aliases that map to the full remote tool names exposed by Spring AI:
+
+```properties
+delegate.agents.repo-agent=bot_fleet_dispatch_task
+delegate.agents.docs-agent=docs_worker_dispatch_task
+```
+
+`delegate` takes an agent alias and a JSON object string containing that agent tool's arguments. For example, a bot fleet API could receive `{"task":"Update the parser","workspace":"/work/repo","constraints":"Keep the public API stable"}`. The remote agent server owns the workspace and its file tools; this MCP server only dispatches the request. When remote tool names collide, Spring AI prefixes them; map the alias to the full exposed name shown in the discovered tool list.
 
 ## Build
 
